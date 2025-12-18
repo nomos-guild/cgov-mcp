@@ -49,14 +49,31 @@ The server runs on `http://localhost:3000` with endpoints:
 - `POST /mcp` - MCP protocol endpoint
 - `GET /health` - Health check
 
-### Stdio Mode (Claude Desktop)
+#### Claude Desktop Configuration (HTTP)
+
+With the server running, add to your Claude Desktop config:
+
+```json
+{
+  "mcpServers": {
+    "cgov-mcp": {
+      "type": "http",
+      "url": "http://localhost:3000/mcp"
+    }
+  }
+}
+```
+
+### Stdio Mode (Alternative)
+
+Use this if you want Claude Desktop to spawn and manage the server process directly (no separate `npm start` needed).
 
 Set `TRANSPORT_MODE=stdio` in `.env`, then configure Claude Desktop:
 
 ```json
 {
   "mcpServers": {
-    "cgov": {
+    "cgov-mcp": {
       "command": "node",
       "args": ["/path/to/cgov-mcp/dist/index.js"],
       "env": {
