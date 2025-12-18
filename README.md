@@ -133,4 +133,4 @@ npm run clean  # Remove dist folder
 
 ## License
 
-ISC
+Apache-2.0
