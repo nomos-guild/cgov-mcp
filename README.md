@@ -90,13 +90,36 @@ Set `TRANSPORT_MODE=stdio` in `.env`, then configure Claude Desktop:
 
 ## Available Tools
 
-| Tool             | Description                   |
-| ---------------- | ----------------------------- |
-| `query_database` | Execute read-only SQL queries |
-| `list_tables`    | List all database tables      |
-| `describe_table` | Get table schema/structure    |
+| Tool                     | Description                                               |
+| ------------------------ | --------------------------------------------------------- |
+| `query_database`         | Execute read-only SQL queries                             |
+| `list_tables`            | List all database tables                                  |
+| `describe_table`         | Get table schema/structure                                |
+| `search_constitution`    | Search the Cardano Constitution for relevant text         |
+| `get_constitution_section` | Get a specific section of the Constitution by name      |
 
-## Example Queries
+## Constitution Search Examples
+
+The Cardano Constitution contains governance rules, tenets, and guardrails. Use the constitution tools to search and retrieve specific provisions:
+
+```text
+# Search for treasury-related provisions
+search_constitution(query="treasury withdrawal")
+
+# Get a specific article
+get_constitution_section(section_name="Article VII")
+
+# Find a specific tenet
+get_constitution_section(section_name="Tenet 5")
+
+# Look up a guardrail code
+get_constitution_section(section_name="TREASURY-01a")
+
+# Search with full section output
+search_constitution(query="DRep voting threshold", include_full_sections=true)
+```
+
+## Example SQL Queries
 
 ```sql
 -- Get top 10 DReps by voting power
