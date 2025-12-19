@@ -90,13 +90,37 @@ Set `TRANSPORT_MODE=stdio` in `.env`, then configure Claude Desktop:
 
 ## Available Tools
 
-| Tool                     | Description                                               |
-| ------------------------ | --------------------------------------------------------- |
-| `query_database`         | Execute read-only SQL queries                             |
-| `list_tables`            | List all database tables                                  |
-| `describe_table`         | Get table schema/structure                                |
-| `search_constitution`    | Search the Cardano Constitution for relevant text         |
-| `get_constitution_section` | Get a specific section of the Constitution by name      |
+| Tool                       | Description                                               |
+| -------------------------- | --------------------------------------------------------- |
+| `query_database`           | Execute read-only SQL queries                             |
+| `list_tables`              | List all database tables                                  |
+| `describe_table`           | Get table schema/structure                                |
+| `search_constitution`      | Search the Cardano Constitution for relevant text         |
+| `get_constitution_section` | Get a specific section of the Constitution by name        |
+| `search_vision_2030`       | Search the Cardano Vision 2030 Strategic Framework        |
+| `get_vision_section`       | Get a specific section of the Vision 2030 document        |
+| `get_vision_kpis`          | Get Vision 2030 KPIs and targets                          |
+
+## Vision 2030 Search Examples
+
+The Cardano Vision 2030 Strategic Framework outlines the path to making Cardano "The World's Operating System":
+
+```text
+# Search for specific topics
+search_vision_2030(query="TVL target")
+
+# Get a specific pillar
+get_vision_section(section_name="Pillar 3")
+
+# Get all KPIs
+get_vision_kpis()
+
+# Filter KPIs by category
+get_vision_kpis(category="Governance")
+
+# Search within a specific pillar
+search_vision_2030(query="DeFi", pillar="Adoption")
+```
 
 ## Constitution Search Examples
 
