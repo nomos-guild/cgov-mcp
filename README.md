@@ -100,6 +100,54 @@ Set `TRANSPORT_MODE=stdio` in `.env`, then configure Claude Desktop:
 | `search_vision_2030`       | Search the Cardano Vision 2030 Strategic Framework        |
 | `get_vision_section`       | Get a specific section of the Vision 2030 document        |
 | `get_vision_kpis`          | Get Vision 2030 KPIs and targets                          |
+| `search_voting_rationale`  | Search voting rationales by keywords                      |
+| `get_vote_rationale`       | Get full rationale for a specific vote                    |
+| `get_drep_voting_history`  | Get DRep voting history with rationales                   |
+| `get_proposal_rationales`  | Get all rationales for a specific proposal                |
+| `get_rationale_stats`      | Get statistics on rationale coverage                      |
+
+## Voting Rationale Tools
+
+The voting rationale tools provide access to on-chain voting data with CIP-100/CIP-136 structured rationales:
+
+```text
+# Search for rationales containing specific keywords
+search_voting_rationale(query="constitutional")
+
+# Filter by vote type and voter type
+search_voting_rationale(query="treasury", vote_filter="NO", voter_type="DREP")
+
+# Get full rationale for a specific vote
+get_vote_rationale(vote_id="abc123...")
+
+# Get rationale by DRep + proposal combination
+get_vote_rationale(drep_id="drep1...", proposal_id="gov_action1...")
+
+# Get a DRep's voting history with rationales
+get_drep_voting_history(drep_id="drep1...")
+
+# Filter by governance action type
+get_drep_voting_history(drep_id="drep1...", governance_action_type="TREASURY_WITHDRAWALS")
+
+# Get all rationales for a proposal grouped by vote choice
+get_proposal_rationales(proposal_id="gov_action1...")
+
+# Get rationale coverage statistics
+get_rationale_stats()
+get_rationale_stats(governance_action_type="INFO_ACTION")
+```
+
+### Rationale JSON Structure (CIP-136)
+
+Rationales are stored in CIP-100/CIP-136 JSON format containing:
+- `body.summary` - Brief summary of the vote reasoning
+- `body.rationaleStatement` - Detailed rationale
+- `body.conclusion` - Final conclusion
+- `body.precedentDiscussion` - Discussion of relevant precedents
+- `body.counterargumentDiscussion` - Acknowledgment of counterarguments
+- `body.internalVote` - Internal vote breakdown (for CC votes)
+- `body.references` - Links to relevant articles and documents
+- `authors` - Who authored the rationale
 
 ## Vision 2030 Search Examples
 

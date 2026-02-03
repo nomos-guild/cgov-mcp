@@ -21,6 +21,15 @@ import {
   getVotingCriteria,
 } from "./voting-principles.js";
 
+// Voting Rationale tools
+import {
+  searchVotingRationale,
+  getVoteRationale,
+  getDrepVotingHistory,
+  getProposalRationales,
+  getRationaleStats,
+} from "./rationale.js";
+
 // Export all tools as a registry
 export const tools: ToolHandler[] = [
   // Generic tools
@@ -40,6 +49,12 @@ export const tools: ToolHandler[] = [
   getVotingKPIBudgets,
   getFundingPartitions,
   getVotingCriteria,
+  // Voting Rationale tools
+  searchVotingRationale,
+  getVoteRationale,
+  getDrepVotingHistory,
+  getProposalRationales,
+  getRationaleStats,
 ];
 
 // Export individual tools for direct access
@@ -54,3 +69,10 @@ export {
   getFundingPartitions,
   getVotingCriteria,
 } from "./voting-principles.js";
+export {
+  searchVotingRationale,
+  getVoteRationale,
+  getDrepVotingHistory,
+  getProposalRationales,
+  getRationaleStats,
+} from "./rationale.js";
