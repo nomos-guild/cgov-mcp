@@ -141,10 +141,17 @@ The rationale JSON contains: summary, rationaleStatement, conclusion, precedentD
         v.voting_power,
         p.title as proposal_title,
         p.governance_action_type,
-        d.name as drep_name
+        p.status as proposal_status,
+        d.name as drep_name,
+        d.active as drep_active,
+        s.pool_name as spo_name,
+        s.ticker as spo_ticker,
+        c.member_name as cc_name
       FROM onchain_vote v
       LEFT JOIN proposal p ON v.proposal_id = p.proposal_id
       LEFT JOIN drep d ON v.drep_id = d.drep_id
+      LEFT JOIN spo s ON v.spo_id = s.pool_id
+      LEFT JOIN cc c ON v.cc_id = c.cc_id
       WHERE v.rationale ILIKE $1
     `;
 
@@ -185,10 +192,12 @@ The rationale JSON contains: summary, rationaleStatement, conclusion, precedentD
           vote: row.vote,
           voter_type: row.voter_type,
           voter_id: row.drep_id || row.spo_id || row.cc_id,
-          voter_name: row.drep_name || null,
+          voter_name: row.drep_name || row.spo_name || row.cc_name || null,
+          spo_ticker: row.spo_ticker || null,
           proposal_id: row.proposal_id,
           proposal_title: row.proposal_title,
           governance_action_type: row.governance_action_type,
+          proposal_status: row.proposal_status,
           voting_power: row.voting_power?.toString(),
           voted_at: row.voted_at,
           rationale_summary: extractRationaleSummary(rationale),

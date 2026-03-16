@@ -30,6 +30,39 @@ import {
   getRationaleStats,
 } from "./rationale.js";
 
+// DRep tools
+import { searchDreps, getDrepProfile, getTopDreps } from "./drep.js";
+
+// Proposal tools
+import { searchProposals, getProposalDetails, getProposalStats } from "./proposal.js";
+
+// SPO tools
+import { searchSPOs, getTopSPOs, getSPOVotingHistory } from "./spo.js";
+
+// CC tools
+import { searchCCMembers, getCCVotingHistory, getCommitteeState } from "./cc.js";
+
+// Analytics tools
+import { getEpochTotals, getNCL, getDelegationStats, getDevActivity } from "./analytics.js";
+
+// Participation analytics tools
+import { getVotingTurnout, getDelegationDistribution, getDelegationTrends } from "./participation.js";
+
+// Concentration analytics tools
+import { getDrepConcentration, getSpoEntityConcentration, getVoteDivergence } from "./concentration.js";
+
+// Efficiency analytics tools
+import { getTimeToEnactment, getContentionRate, getGovernanceVolume } from "./efficiency.js";
+
+// CC analytics tools
+import { getCCDecisionMetrics, getComplianceStatus } from "./cc-analytics.js";
+
+// DRep analytics tools
+import { getDrepActivityRate, getDrepRationaleRate, getDrepLifecycleTrends } from "./drep-analytics.js";
+
+// Dev analytics tools
+import { getDevHealth, getRepoTrends } from "./dev-analytics.js";
+
 // Export all tools as a registry
 export const tools: ToolHandler[] = [
   // Generic tools
@@ -55,6 +88,49 @@ export const tools: ToolHandler[] = [
   getDrepVotingHistory,
   getProposalRationales,
   getRationaleStats,
+  // DRep tools
+  searchDreps,
+  getDrepProfile,
+  getTopDreps,
+  // Proposal tools
+  searchProposals,
+  getProposalDetails,
+  getProposalStats,
+  // SPO tools
+  searchSPOs,
+  getTopSPOs,
+  getSPOVotingHistory,
+  // CC tools
+  searchCCMembers,
+  getCCVotingHistory,
+  getCommitteeState,
+  // Analytics tools
+  getEpochTotals,
+  getNCL,
+  getDelegationStats,
+  getDevActivity,
+  // Participation analytics
+  getVotingTurnout,
+  getDelegationDistribution,
+  getDelegationTrends,
+  // Concentration analytics
+  getDrepConcentration,
+  getSpoEntityConcentration,
+  getVoteDivergence,
+  // Efficiency analytics
+  getTimeToEnactment,
+  getContentionRate,
+  getGovernanceVolume,
+  // CC analytics
+  getCCDecisionMetrics,
+  getComplianceStatus,
+  // DRep analytics
+  getDrepActivityRate,
+  getDrepRationaleRate,
+  getDrepLifecycleTrends,
+  // Dev analytics
+  getDevHealth,
+  getRepoTrends,
 ];
 
 // Export individual tools for direct access
@@ -76,3 +152,14 @@ export {
   getProposalRationales,
   getRationaleStats,
 } from "./rationale.js";
+export { searchDreps, getDrepProfile, getTopDreps } from "./drep.js";
+export { searchProposals, getProposalDetails, getProposalStats } from "./proposal.js";
+export { searchSPOs, getTopSPOs, getSPOVotingHistory } from "./spo.js";
+export { searchCCMembers, getCCVotingHistory, getCommitteeState } from "./cc.js";
+export { getEpochTotals, getNCL, getDelegationStats, getDevActivity } from "./analytics.js";
+export { getVotingTurnout, getDelegationDistribution, getDelegationTrends } from "./participation.js";
+export { getDrepConcentration, getSpoEntityConcentration, getVoteDivergence } from "./concentration.js";
+export { getTimeToEnactment, getContentionRate, getGovernanceVolume } from "./efficiency.js";
+export { getCCDecisionMetrics, getComplianceStatus } from "./cc-analytics.js";
+export { getDrepActivityRate, getDrepRationaleRate, getDrepLifecycleTrends } from "./drep-analytics.js";
+export { getDevHealth, getRepoTrends } from "./dev-analytics.js";
