@@ -10,7 +10,9 @@ Returns DRep profiles including:
 - Voting power and delegator count
 - Registration status and activity
 - CIP-119 metadata (bio, motivations, objectives, qualifications)
-- Expiration epoch`,
+- Expiration epoch
+
+Note: All monetary/power values (voting_power, stake amounts) are in lovelace. Divide by 1,000,000 to display in ADA.`,
     inputSchema: {
       type: "object",
       properties: {
@@ -138,7 +140,9 @@ Returns:
 - Complete CIP-119 metadata (bio, motivations, objectives, qualifications, references)
 - Current voting power and delegator count
 - Registration status and activity
-- Historical epoch snapshots of voting power/delegators`,
+- Historical epoch snapshots of voting power/delegators
+
+Note: All monetary/power values (voting_power, stake amounts) are in lovelace. Divide by 1,000,000 to display in ADA.`,
     inputSchema: {
       type: "object",
       properties: {
@@ -233,7 +237,9 @@ export const getTopDreps: ToolHandler = {
     name: "get_top_dreps",
     description: `Get the top DReps ranked by voting power or delegator count.
 
-Returns a leaderboard of DReps with their key metrics. Useful for understanding power distribution in Cardano governance.`,
+Returns a leaderboard of DReps with their key metrics. Useful for understanding power distribution in Cardano governance.
+
+Note: All monetary/power values (voting_power, stake amounts) are in lovelace. Divide by 1,000,000 to display in ADA.`,
     inputSchema: {
       type: "object",
       properties: {

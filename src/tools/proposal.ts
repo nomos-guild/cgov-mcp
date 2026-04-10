@@ -11,7 +11,9 @@ Returns proposals with:
 - Governance action type (INFO_ACTION, TREASURY_WITHDRAWALS, etc.)
 - Status (ACTIVE, RATIFIED, ENACTED, EXPIRED, DROPPED, CLOSED)
 - Epoch milestones (submission, ratification, enactment, expiration)
-- Vote power breakdowns for DReps and SPOs`,
+- Vote power breakdowns for DReps and SPOs
+
+Note: All monetary/power values (voting_power, stake amounts) are in lovelace. Divide by 1,000,000 to display in ADA.`,
     inputSchema: {
       type: "object",
       properties: {
@@ -200,7 +202,9 @@ Returns complete proposal data including:
 - Full title, description, and rationale text
 - Vote power breakdowns for DReps and SPOs
 - Epoch milestones (submission through enactment/expiration)
-- Vote counts by voter type`,
+- Vote counts by voter type
+
+Note: All monetary/power values (voting_power, stake amounts) are in lovelace. Divide by 1,000,000 to display in ADA.`,
     inputSchema: {
       type: "object",
       properties: {

@@ -76,7 +76,9 @@ Use this to find:
 - DRep/CC/SPO voting patterns with explanations
 - References to specific articles or governance actions
 
-The rationale JSON contains: summary, rationaleStatement, conclusion, precedentDiscussion, counterargumentDiscussion, internalVote (for CC), and references.`,
+The rationale JSON contains: summary, rationaleStatement, conclusion, precedentDiscussion, counterargumentDiscussion, internalVote (for CC), and references.
+
+Note: All monetary/power values (voting_power) are in lovelace. Divide by 1,000,000 to display in ADA.`,
     inputSchema: {
       type: "object",
       properties: {
@@ -355,7 +357,9 @@ Returns all votes cast by the DRep including:
 - Vote choice (YES/NO/ABSTAIN)
 - Proposal details
 - Rationale summary for each vote
-- Voting power at time of vote`,
+- Voting power at time of vote
+
+Note: All monetary/power values (voting_power) are in lovelace. Divide by 1,000,000 to display in ADA.`,
     inputSchema: {
       type: "object",
       properties: {
@@ -507,7 +511,9 @@ export const getProposalRationales: ToolHandler = {
     name: "get_proposal_rationales",
     description: `Get all voting rationales for a specific proposal.
 
-Returns all votes with rationales for a governance action, grouped by vote choice (YES/NO/ABSTAIN) and voter type (DREP/SPO/CC). Useful for understanding the reasoning behind community decisions.`,
+Returns all votes with rationales for a governance action, grouped by vote choice (YES/NO/ABSTAIN) and voter type (DREP/SPO/CC). Useful for understanding the reasoning behind community decisions.
+
+Note: All monetary/power values (voting_power) are in lovelace. Divide by 1,000,000 to display in ADA.`,
     inputSchema: {
       type: "object",
       properties: {

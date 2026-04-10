@@ -7,11 +7,13 @@ export const getEpochTotals: ToolHandler = {
     description: `Get epoch-level analytics data including circulation, treasury, rewards, supply, reserves, and governance delegation metrics.
 
 Data includes:
-- Circulation, treasury, reward, supply, reserves (in lovelace)
+- Circulation, treasury, reward, supply, reserves
 - Delegated DRep power and total pool vote power
 - Special DRep metrics (always-abstain, always-no-confidence delegator counts and power)
 - Epoch timestamps (start, end, first/last block)
-- Block and transaction counts`,
+- Block and transaction counts
+
+Note: All monetary/power values (voting_power, circulation, treasury, stake amounts) are in lovelace. Divide by 1,000,000 to display in ADA.`,
     inputSchema: {
       type: "object",
       properties: {
@@ -106,7 +108,9 @@ export const getNCL: ToolHandler = {
     name: "get_ncl",
     description: `Get Net Change Limit (NCL) data for treasury withdrawals. Shows the current and limit amounts per year.
 
-The NCL tracks how much ADA can be withdrawn from the treasury in each budget year.`,
+The NCL tracks how much ADA can be withdrawn from the treasury in each budget year.
+
+Note: All monetary values (current_withdrawals, limit) are in lovelace. Divide by 1,000,000 to display in ADA.`,
     inputSchema: {
       type: "object",
       properties: {
@@ -162,7 +166,9 @@ export const getDelegationStats: ToolHandler = {
     name: "get_delegation_stats",
     description: `Get delegation statistics including total delegated stake, delegation distribution across DReps, and recent delegation changes.
 
-Useful for understanding the current state of DRep delegation in Cardano governance.`,
+Useful for understanding the current state of DRep delegation in Cardano governance.
+
+Note: All monetary/power values (voting_power, total_delegated, stake amounts) are in lovelace. Divide by 1,000,000 to display in ADA.`,
     inputSchema: {
       type: "object",
       properties: {
