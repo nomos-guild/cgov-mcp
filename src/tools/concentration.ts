@@ -122,13 +122,13 @@ Groups pools by pool_group entity to identify multi-pool operators.`,
     try {
       const result = await query(`
         SELECT
-          COALESCE(pg.name, s.pool_name, s.pool_id) as entity_name,
+          COALESCE(pg.pool_group, s.pool_name, s.pool_id) as entity_name,
           COUNT(*) as pool_count,
           SUM(s.voting_power) as total_voting_power
         FROM spo s
-        LEFT JOIN pool_group pg ON s.pool_group_id = pg.id
+        LEFT JOIN pool_group pg ON s.pool_id = pg.pool_id
         WHERE s.voting_power > 0
-        GROUP BY COALESCE(pg.name, s.pool_name, s.pool_id)
+        GROUP BY COALESCE(pg.pool_group, s.pool_name, s.pool_id)
         ORDER BY total_voting_power DESC
       `);
 

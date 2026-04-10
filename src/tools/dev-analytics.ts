@@ -205,12 +205,12 @@ Uses repo_daily_snapshot for time-series data and github_repository for language
       const sql = `
         SELECT
           repo_id,
-          snapshot_date,
+          date,
           stars,
           forks
         FROM repo_daily_snapshot
         ${repoFilter}
-        ORDER BY ${orderField} DESC, snapshot_date DESC
+        ORDER BY ${orderField} DESC, date DESC
         LIMIT $${params.length + 1}
       `;
       params.push(maxLimit);
@@ -225,7 +225,7 @@ Uses repo_daily_snapshot for time-series data and github_repository for language
         metric,
         snapshots: result.rows.map((r) => ({
           repo_id: r.repo_id,
-          date: r.snapshot_date,
+          date: r.date,
           stars: r.stars,
           forks: r.forks,
         })),

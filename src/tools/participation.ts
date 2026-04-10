@@ -182,14 +182,7 @@ Useful for understanding whether governance power is concentrated among whales o
       FROM stake_delegation_state
       ${drepFilter}
       GROUP BY band
-      ORDER BY
-        CASE
-          WHEN amount / 1000000 < 1000 THEN 1
-          WHEN amount / 1000000 < 10000 THEN 2
-          WHEN amount / 1000000 < 100000 THEN 3
-          WHEN amount / 1000000 < 1000000 THEN 4
-          ELSE 5
-        END
+      ORDER BY MIN(amount)
     `;
 
     try {

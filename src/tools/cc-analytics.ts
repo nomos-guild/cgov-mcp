@@ -233,7 +233,7 @@ Useful for tracking CC constitutional review outcomes and identifying proposals 
       FROM onchain_vote v
       JOIN proposal p ON v.proposal_id = p.proposal_id
       WHERE ${conditions.join(" AND ")}
-      GROUP BY v.proposal_id, p.title, p.governance_action_type, p.status
+      GROUP BY v.proposal_id, p.title, p.governance_action_type, p.status, p.created_at
       ORDER BY p.created_at DESC NULLS LAST
       LIMIT $${paramIndex}
     `;
