@@ -1,6 +1,50 @@
 import { query } from "../db/index.js";
 import { createJsonResult, createTextResult, type ToolHandler } from "../types/index.js";
 
+// Round to 1 decimal place. Returns null if the input is null.
+function pct(num: bigint, denom: bigint): number | null {
+  if (denom === 0n) return null;
+  // Scale by 1000 then divide for one decimal place; avoids float precision loss on large BigInts.
+  return Number((num * 1000n) / denom) / 10;
+}
+
+function toBig(v: unknown): bigint {
+  if (v === null || v === undefined) return 0n;
+  try {
+    return BigInt(typeof v === "string" ? v : String(v));
+  } catch {
+    return 0n;
+  }
+}
+
+interface VoteStats {
+  active_total: string;        // yes + no + abstain, in lovelace
+  yes_pct_of_active: number | null;
+  no_pct_of_active: number | null;
+  abstain_pct_of_active: number | null;
+  participation_pct: number | null;  // active_total / total_power
+}
+
+function computeVoteStats(
+  yes: unknown,
+  no: unknown,
+  abstain: unknown,
+  total: unknown
+): VoteStats {
+  const y = toBig(yes);
+  const n = toBig(no);
+  const a = toBig(abstain);
+  const t = toBig(total);
+  const active = y + n + a;
+  return {
+    active_total: active.toString(),
+    yes_pct_of_active: pct(y, active),
+    no_pct_of_active: pct(n, active),
+    abstain_pct_of_active: pct(a, active),
+    participation_pct: pct(active, t),
+  };
+}
+
 export const searchProposals: ToolHandler = {
   definition: {
     name: "search_proposals",
@@ -12,10 +56,12 @@ Returns proposals with:
 - Withdrawal amount (for TREASURY_WITHDRAWALS proposals)
 - Status (ACTIVE, RATIFIED, ENACTED, EXPIRED, DROPPED, CLOSED)
 - Epoch milestones (submission, ratification, enactment, expiration)
-- Vote power breakdowns for DReps and SPOs
+- Vote power breakdowns for DReps and SPOs, plus pre-computed percentages
 - Linked CIP-179 survey transaction (if any)
 
-Note: All monetary/power values (voting_power, withdrawal_amount, stake amounts) are in lovelace. Divide by 1,000,000 to display in ADA.`,
+Notes:
+- All raw power/amount values (voting_power, withdrawal_amount) are in lovelace. Divide by 1,000,000 for ADA.
+- For describing the verdict, prefer the pre-computed yes/no/abstain percentages over raw amounts — DRep totals can run into the billions of ADA and "1.6B No vs 411M Yes" reads as scary numbers when the relevant signal is "80% No, 20% Yes". The fields drep_votes.{yes,no,abstain}_pct_of_active and drep_votes.participation_pct are already calculated for you.`,
     inputSchema: {
       type: "object",
       properties: {
@@ -179,6 +225,12 @@ Note: All monetary/power values (voting_power, withdrawal_amount, stake amounts)
             always_abstain_power: p.drep_always_abstain_vote_power?.toString(),
             always_no_confidence_power: p.drep_always_no_confidence_power?.toString(),
             inactive_power: p.drep_inactive_vote_power?.toString(),
+            ...computeVoteStats(
+              p.drep_active_yes_vote_power,
+              p.drep_active_no_vote_power,
+              p.drep_active_abstain_vote_power,
+              p.drep_total_vote_power
+            ),
           },
           spo_votes: {
             total_power: p.spo_total_vote_power?.toString(),
@@ -188,6 +240,12 @@ Note: All monetary/power values (voting_power, withdrawal_amount, stake amounts)
             always_abstain_power: p.spo_always_abstain_vote_power?.toString(),
             always_no_confidence_power: p.spo_always_no_confidence_power?.toString(),
             no_vote_power: p.spo_no_vote_power?.toString(),
+            ...computeVoteStats(
+              p.spo_active_yes_vote_power,
+              p.spo_active_no_vote_power,
+              p.spo_active_abstain_vote_power,
+              p.spo_total_vote_power
+            ),
           },
           created_at: p.created_at,
         })),
@@ -208,11 +266,13 @@ Returns complete proposal data including:
 - Full title, description, and rationale text
 - Withdrawal amount (for TREASURY_WITHDRAWALS proposals)
 - CIP-179 survey link/details (if any)
-- Vote power breakdowns for DReps and SPOs
+- Vote power breakdowns for DReps and SPOs, plus pre-computed percentages
 - Epoch milestones (submission through enactment/expiration)
 - Vote counts by voter type
 
-Note: All monetary/power values (voting_power, withdrawal_amount, stake amounts) are in lovelace. Divide by 1,000,000 to display in ADA.`,
+Notes:
+- All raw power/amount values (voting_power, withdrawal_amount) are in lovelace. Divide by 1,000,000 for ADA.
+- For describing the verdict, prefer the pre-computed yes/no/abstain percentages over raw amounts — DRep totals can run into the billions of ADA and "1.6B No vs 411M Yes" reads as scary numbers when the relevant signal is "80% No, 20% Yes". The fields drep_votes.{yes,no,abstain}_pct_of_active and drep_votes.participation_pct are already calculated for you.`,
     inputSchema: {
       type: "object",
       properties: {
@@ -283,6 +343,12 @@ Note: All monetary/power values (voting_power, withdrawal_amount, stake amounts)
             always_abstain_power: p.drep_always_abstain_vote_power?.toString(),
             always_no_confidence_power: p.drep_always_no_confidence_power?.toString(),
             inactive_power: p.drep_inactive_vote_power?.toString(),
+            ...computeVoteStats(
+              p.drep_active_yes_vote_power,
+              p.drep_active_no_vote_power,
+              p.drep_active_abstain_vote_power,
+              p.drep_total_vote_power
+            ),
           },
           spo_votes: {
             total_power: p.spo_total_vote_power?.toString(),
@@ -292,6 +358,12 @@ Note: All monetary/power values (voting_power, withdrawal_amount, stake amounts)
             always_abstain_power: p.spo_always_abstain_vote_power?.toString(),
             always_no_confidence_power: p.spo_always_no_confidence_power?.toString(),
             no_vote_power: p.spo_no_vote_power?.toString(),
+            ...computeVoteStats(
+              p.spo_active_yes_vote_power,
+              p.spo_active_no_vote_power,
+              p.spo_active_abstain_vote_power,
+              p.spo_total_vote_power
+            ),
           },
         },
         vote_counts: voteStats.rows.map((r) => ({
