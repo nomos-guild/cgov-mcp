@@ -9,11 +9,13 @@ export const searchProposals: ToolHandler = {
 Returns proposals with:
 - Title, description, and rationale
 - Governance action type (INFO_ACTION, TREASURY_WITHDRAWALS, etc.)
+- Withdrawal amount (for TREASURY_WITHDRAWALS proposals)
 - Status (ACTIVE, RATIFIED, ENACTED, EXPIRED, DROPPED, CLOSED)
 - Epoch milestones (submission, ratification, enactment, expiration)
 - Vote power breakdowns for DReps and SPOs
+- Linked CIP-179 survey transaction (if any)
 
-Note: All monetary/power values (voting_power, stake amounts) are in lovelace. Divide by 1,000,000 to display in ADA.`,
+Note: All monetary/power values (voting_power, withdrawal_amount, stake amounts) are in lovelace. Divide by 1,000,000 to display in ADA.`,
     inputSchema: {
       type: "object",
       properties: {
@@ -108,6 +110,7 @@ Note: All monetary/power values (voting_power, stake amounts) are in lovelace. D
         description,
         rationale,
         governance_action_type,
+        withdrawal_amount,
         status,
         submission_epoch,
         ratified_epoch,
@@ -129,6 +132,7 @@ Note: All monetary/power values (voting_power, stake amounts) are in lovelace. D
         spo_always_abstain_vote_power,
         spo_always_no_confidence_power,
         spo_no_vote_power,
+        linked_survey_tx_id,
         created_at,
         updated_at
       FROM proposal
@@ -156,7 +160,9 @@ Note: All monetary/power values (voting_power, stake amounts) are in lovelace. D
           description: p.description?.substring(0, 500),
           rationale: p.rationale?.substring(0, 500),
           governance_action_type: p.governance_action_type,
+          withdrawal_amount: p.withdrawal_amount?.toString(),
           status: p.status,
+          linked_survey_tx_id: p.linked_survey_tx_id,
           epochs: {
             submission: p.submission_epoch,
             ratified: p.ratified_epoch,
@@ -200,11 +206,13 @@ export const getProposalDetails: ToolHandler = {
 
 Returns complete proposal data including:
 - Full title, description, and rationale text
+- Withdrawal amount (for TREASURY_WITHDRAWALS proposals)
+- CIP-179 survey link/details (if any)
 - Vote power breakdowns for DReps and SPOs
 - Epoch milestones (submission through enactment/expiration)
 - Vote counts by voter type
 
-Note: All monetary/power values (voting_power, stake amounts) are in lovelace. Divide by 1,000,000 to display in ADA.`,
+Note: All monetary/power values (voting_power, withdrawal_amount, stake amounts) are in lovelace. Divide by 1,000,000 to display in ADA.`,
     inputSchema: {
       type: "object",
       properties: {
@@ -254,8 +262,11 @@ Note: All monetary/power values (voting_power, stake amounts) are in lovelace. D
           description: p.description,
           rationale: p.rationale,
           governance_action_type: p.governance_action_type,
+          withdrawal_amount: p.withdrawal_amount?.toString(),
           status: p.status,
           metadata: p.metadata,
+          linked_survey_tx_id: p.linked_survey_tx_id,
+          survey_details: p.survey_details,
           epochs: {
             submission: p.submission_epoch,
             ratified: p.ratified_epoch,

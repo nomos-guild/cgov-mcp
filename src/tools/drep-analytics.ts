@@ -57,7 +57,7 @@ Note: All monetary/power values (voting_power) are in lovelace. Divide by 1,000,
         const regResult = await query(
           `SELECT MIN(epoch_no) as registration_epoch
            FROM drep_lifecycle_event
-           WHERE drep_id = $1 AND action = 'REGISTERED'`,
+           WHERE drep_id = $1 AND action = 'registration'`,
           [drep_id]
         );
         const regEpoch = regResult.rows[0]?.registration_epoch;
@@ -119,7 +119,7 @@ Note: All monetary/power values (voting_power) are in lovelace. Divide by 1,000,
         WITH drep_reg AS (
           SELECT drep_id, MIN(epoch_no) as registration_epoch
           FROM drep_lifecycle_event
-          WHERE action = 'REGISTERED'
+          WHERE action = 'registration'
           GROUP BY drep_id
         ),
         drep_votes AS (
@@ -355,9 +355,9 @@ Shows net new DReps per epoch from drep_lifecycle_event table. Useful for tracki
         .sort(([a], [b]) => Number(b) - Number(a))
         .slice(0, maxLimit)
         .map(([epoch, actions]) => {
-          const registered = actions["REGISTERED"] || 0;
-          const deregistered = actions["DEREGISTERED"] || 0;
-          const updated = actions["UPDATED"] || 0;
+          const registered = actions["registration"] || 0;
+          const deregistered = actions["deregistration"] || 0;
+          const updated = actions["update"] || 0;
           return {
             epoch: Number(epoch),
             registered,

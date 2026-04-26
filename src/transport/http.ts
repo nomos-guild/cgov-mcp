@@ -2,6 +2,7 @@ import express, { type Request, type Response } from "express";
 import cors from "cors";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import type { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { checkDbHealth } from "../db/index.js";
 
 export interface HttpServerOptions {
   port: number;
@@ -18,9 +19,16 @@ export async function startHttpServer(
   app.use(cors());
   app.use(express.json());
 
-  // Health check endpoint
-  app.get("/health", (_req: Request, res: Response) => {
-    res.json({ status: "ok", server: "cgov-mcp" });
+  // Health check endpoint — reports DB connectivity and schema presence
+  // so misconfigurations (wrong DB_NAME, unmigrated DB) surface here
+  // instead of inside every tool call.
+  app.get("/health", async (_req: Request, res: Response) => {
+    const db = await checkDbHealth();
+    res.status(db.ok ? 200 : 503).json({
+      status: db.ok ? "ok" : "degraded",
+      server: "cgov-mcp",
+      db,
+    });
   });
 
   // Streamable HTTP endpoint for MCP connections
