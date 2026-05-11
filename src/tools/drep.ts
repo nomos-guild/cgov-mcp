@@ -1,18 +1,12 @@
 import { query } from "../db/index.js";
+import { drepUrl } from "../lib/urls.js";
 import { createJsonResult, createTextResult, type ToolHandler } from "../types/index.js";
 
 export const searchDreps: ToolHandler = {
   definition: {
     name: "search_dreps",
-    description: `Search for Delegated Representatives (DReps) by name, ID, or metadata keywords.
-
-Returns DRep profiles including:
-- Voting power and delegator count
-- Registration status and activity
-- CIP-119 metadata (bio, motivations, objectives, qualifications)
-- Expiration epoch
-
-Note: All monetary/power values (voting_power, stake amounts) are in lovelace. Divide by 1,000,000 to display in ADA.`,
+    description:
+      "Search Delegated Representatives (DReps) by name, ID, or CIP-119 metadata keywords. Returns voting power, delegator count, status, bio, and the canonical `url` to cite.",
     inputSchema: {
       type: "object",
       properties: {
@@ -109,6 +103,7 @@ Note: All monetary/power values (voting_power, stake amounts) are in lovelace. D
         query: searchQuery,
         dreps: result.rows.map((r) => ({
           drep_id: r.drep_id,
+          url: drepUrl(r.drep_id),
           name: r.name,
           bio: r.bio,
           motivations: r.motivations,
@@ -134,15 +129,8 @@ Note: All monetary/power values (voting_power, stake amounts) are in lovelace. D
 export const getDrepProfile: ToolHandler = {
   definition: {
     name: "get_drep_profile",
-    description: `Get the full profile of a specific DRep by their ID.
-
-Returns:
-- Complete CIP-119 metadata (bio, motivations, objectives, qualifications, references)
-- Current voting power and delegator count
-- Registration status and activity
-- Historical epoch snapshots of voting power/delegators
-
-Note: All monetary/power values (voting_power, stake amounts) are in lovelace. Divide by 1,000,000 to display in ADA.`,
+    description:
+      "Get the full profile of a specific DRep by ID. Returns CIP-119 metadata, current voting power/delegators, status, optional epoch-snapshot history, lifecycle events, and the canonical `url`.",
     inputSchema: {
       type: "object",
       properties: {
@@ -178,6 +166,7 @@ Note: All monetary/power values (voting_power, stake amounts) are in lovelace. D
 
       const profile: Record<string, unknown> = {
         drep_id: d.drep_id,
+        url: drepUrl(d.drep_id),
         name: d.name,
         bio: d.bio,
         motivations: d.motivations,
@@ -235,11 +224,8 @@ Note: All monetary/power values (voting_power, stake amounts) are in lovelace. D
 export const getTopDreps: ToolHandler = {
   definition: {
     name: "get_top_dreps",
-    description: `Get the top DReps ranked by voting power or delegator count.
-
-Returns a leaderboard of DReps with their key metrics. Useful for understanding power distribution in Cardano governance.
-
-Note: All monetary/power values (voting_power, stake amounts) are in lovelace. Divide by 1,000,000 to display in ADA.`,
+    description:
+      "Get the leaderboard of top DReps ranked by voting power or delegator count, with cumulative power %. Each row includes the canonical `url`.",
     inputSchema: {
       type: "object",
       properties: {
@@ -309,6 +295,7 @@ Note: All monetary/power values (voting_power, stake amounts) are in lovelace. D
         return {
           rank: i + 1,
           drep_id: r.drep_id,
+          url: drepUrl(r.drep_id),
           name: r.name,
           bio: r.bio?.substring(0, 200),
           voting_power: r.voting_power?.toString(),

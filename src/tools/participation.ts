@@ -9,9 +9,7 @@ export const getVotingTurnout: ToolHandler = {
 DRep turnout = (active_yes + active_no + active_abstain) / drep_total_vote_power
 SPO turnout = (active_yes + active_no + active_abstain) / spo_total_vote_power
 
-Returns turnout percentages for each proposal. Useful for understanding governance participation levels and comparing engagement across proposal types.
-
-Note: All monetary/power values (vote_power) are in lovelace. Divide by 1,000,000 to display in ADA.`,
+Returns turnout percentages for each proposal. Useful for understanding governance participation levels and comparing engagement across proposal types.`,
     inputSchema: {
       type: "object",
       properties: {
@@ -148,9 +146,7 @@ export const getDelegationDistribution: ToolHandler = {
 
 Bands: 0-1k ADA, 1k-10k, 10k-100k, 100k-1M, 1M+ ADA.
 Shows how many delegators and total stake fall into each band.
-Useful for understanding whether governance power is concentrated among whales or distributed across small holders.
-
-Note: All monetary/power values (stake amounts) are in lovelace. Divide by 1,000,000 to display in ADA.`,
+Useful for understanding whether governance power is concentrated among whales or distributed across small holders.`,
     inputSchema: {
       type: "object",
       properties: {
@@ -220,9 +216,7 @@ export const getDelegationTrends: ToolHandler = {
     name: "get_delegation_trends",
     description: `Get per-epoch delegation rate trends from epoch_totals.
 
-Returns delegated DRep power as a percentage of circulation per epoch, plus special DRep counts (always_abstain, always_no_confidence). Useful for tracking governance participation growth over time.
-
-Note: All monetary/power values (delegated_drep_power, circulation, voting_power) are in lovelace. Divide by 1,000,000 to display in ADA.`,
+Returns delegated DRep power as a percentage of circulation per epoch, plus special DRep counts (always_abstain, always_no_confidence). Useful for tracking governance participation growth over time.`,
     inputSchema: {
       type: "object",
       properties: {

@@ -6,9 +6,7 @@ export const searchSPOs: ToolHandler = {
     name: "search_spos",
     description: `Search for Stake Pool Operators (SPOs) by pool name, ticker, or pool ID.
 
-Returns SPO profiles with voting power and pool metadata.
-
-Note: All monetary/power values (voting_power, stake amounts) are in lovelace. Divide by 1,000,000 to display in ADA.`,
+Returns SPO profiles with voting power and pool metadata.`,
     inputSchema: {
       type: "object",
       properties: {
@@ -95,9 +93,7 @@ Note: All monetary/power values (voting_power, stake amounts) are in lovelace. D
 export const getTopSPOs: ToolHandler = {
   definition: {
     name: "get_top_spos",
-    description: `Get the top SPOs ranked by voting power. Includes pool group information for identifying multi-pool operators.
-
-Note: All monetary/power values (voting_power, stake amounts) are in lovelace. Divide by 1,000,000 to display in ADA.`,
+    description: `Get the top SPOs ranked by voting power. Includes pool group information for identifying multi-pool operators.`,
     inputSchema: {
       type: "object",
       properties: {
@@ -186,9 +182,7 @@ export const getSPOVotingHistory: ToolHandler = {
     name: "get_spo_voting_history",
     description: `Get the voting history for a specific SPO (Stake Pool Operator).
 
-Returns all votes cast by the SPO including vote choice, proposal details, and voting power.
-
-Note: All monetary/power values (voting_power, stake amounts) are in lovelace. Divide by 1,000,000 to display in ADA.`,
+Returns all votes cast by the SPO including vote choice, proposal details, and voting power.`,
     inputSchema: {
       type: "object",
       properties: {

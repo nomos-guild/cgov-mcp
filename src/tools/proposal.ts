@@ -1,4 +1,6 @@
 import { query } from "../db/index.js";
+import { resolveFundingEntity } from "../lib/treasury-proposals.js";
+import { proposalUrl } from "../lib/urls.js";
 import { createJsonResult, createTextResult, type ToolHandler } from "../types/index.js";
 
 // Round to 1 decimal place. Returns null if the input is null.
@@ -48,20 +50,8 @@ function computeVoteStats(
 export const searchProposals: ToolHandler = {
   definition: {
     name: "search_proposals",
-    description: `Search governance proposals by title, description, type, or status.
-
-Returns proposals with:
-- Title, description, and rationale
-- Governance action type (INFO_ACTION, TREASURY_WITHDRAWALS, etc.)
-- Withdrawal amount (for TREASURY_WITHDRAWALS proposals)
-- Status (ACTIVE, RATIFIED, ENACTED, EXPIRED, DROPPED, CLOSED)
-- Epoch milestones (submission, ratification, enactment, expiration)
-- Vote power breakdowns for DReps and SPOs, plus pre-computed percentages
-- Linked CIP-179 survey transaction (if any)
-
-Notes:
-- All raw power/amount values (voting_power, withdrawal_amount) are in lovelace. Divide by 1,000,000 for ADA.
-- For describing the verdict, prefer the pre-computed yes/no/abstain percentages over raw amounts — DRep totals can run into the billions of ADA and "1.6B No vs 411M Yes" reads as scary numbers when the relevant signal is "80% No, 20% Yes". The fields drep_votes.{yes,no,abstain}_pct_of_active and drep_votes.participation_pct are already calculated for you.`,
+    description:
+      "Search governance proposals by title/description/type/status. Each row includes the canonical `url`, action type, status, epoch milestones, DRep/SPO vote breakdown with pre-computed percentages, and for TREASURY_WITHDRAWALS a `funding_entity` (entity_id + label + url) resolved from the curated registry — use that directly instead of inferring from the title.",
     inputSchema: {
       type: "object",
       properties: {
@@ -201,6 +191,8 @@ Notes:
         total_results: result.rows.length,
         proposals: result.rows.map((p) => ({
           proposal_id: p.proposal_id,
+          url: proposalUrl(p.proposal_id),
+          funding_entity: resolveFundingEntity(p.proposal_id, p.title, p.governance_action_type),
           tx_hash: p.tx_hash,
           title: p.title,
           description: p.description?.substring(0, 500),
@@ -260,19 +252,8 @@ Notes:
 export const getProposalDetails: ToolHandler = {
   definition: {
     name: "get_proposal_details",
-    description: `Get full details of a specific governance proposal by ID.
-
-Returns complete proposal data including:
-- Full title, description, and rationale text
-- Withdrawal amount (for TREASURY_WITHDRAWALS proposals)
-- CIP-179 survey link/details (if any)
-- Vote power breakdowns for DReps and SPOs, plus pre-computed percentages
-- Epoch milestones (submission through enactment/expiration)
-- Vote counts by voter type
-
-Notes:
-- All raw power/amount values (voting_power, withdrawal_amount) are in lovelace. Divide by 1,000,000 for ADA.
-- For describing the verdict, prefer the pre-computed yes/no/abstain percentages over raw amounts — DRep totals can run into the billions of ADA and "1.6B No vs 411M Yes" reads as scary numbers when the relevant signal is "80% No, 20% Yes". The fields drep_votes.{yes,no,abstain}_pct_of_active and drep_votes.participation_pct are already calculated for you.`,
+    description:
+      "Get full details of a specific governance proposal by ID. Returns title, full description and rationale, vote breakdowns with pre-computed percentages, epoch milestones, vote counts by voter type, the canonical `url`, and for TREASURY_WITHDRAWALS a `funding_entity` resolved from the curated registry.",
     inputSchema: {
       type: "object",
       properties: {
@@ -316,6 +297,8 @@ Notes:
       return createJsonResult({
         proposal: {
           proposal_id: p.proposal_id,
+          url: proposalUrl(p.proposal_id),
+          funding_entity: resolveFundingEntity(p.proposal_id, p.title, p.governance_action_type),
           tx_hash: p.tx_hash,
           cert_index: p.cert_index,
           title: p.title,

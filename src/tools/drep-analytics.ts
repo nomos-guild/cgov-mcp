@@ -6,9 +6,7 @@ export const getDrepActivityRate: ToolHandler = {
     name: "get_drep_activity_rate",
     description: `Compute per-DRep activity rate: unique proposals voted on / total eligible proposals.
 
-Uses drep_lifecycle_event registration epoch to determine eligible proposals (only proposals submitted after the DRep registered). Useful for identifying inactive DReps and understanding overall engagement levels.
-
-Note: All monetary/power values (voting_power) are in lovelace. Divide by 1,000,000 to display in ADA.`,
+Uses drep_lifecycle_event registration epoch to determine eligible proposals (only proposals submitted after the DRep registered). Useful for identifying inactive DReps and understanding overall engagement levels.`,
     inputSchema: {
       type: "object",
       properties: {
@@ -184,9 +182,7 @@ export const getDrepRationaleRate: ToolHandler = {
     name: "get_drep_rationale_rate",
     description: `Compute per-DRep rationale provision rate: votes with rationale or anchor_url / total votes.
 
-Higher rationale rates indicate more transparent and accountable DReps. Useful for evaluating DRep quality and governance transparency.
-
-Note: All monetary/power values (voting_power) are in lovelace. Divide by 1,000,000 to display in ADA.`,
+Higher rationale rates indicate more transparent and accountable DReps. Useful for evaluating DRep quality and governance transparency.`,
     inputSchema: {
       type: "object",
       properties: {

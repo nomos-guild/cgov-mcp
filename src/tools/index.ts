@@ -63,6 +63,13 @@ import { getDrepActivityRate, getDrepRationaleRate, getDrepLifecycleTrends } fro
 // Dev analytics tools
 import { getDevHealth, getRepoTrends } from "./dev-analytics.js";
 
+// Treasury entity tools
+import {
+  searchTreasuryEntitiesTool,
+  listTreasuryEntitiesTool,
+  getEntityProposalsTool,
+} from "./treasury.js";
+
 // Export all tools as a registry
 export const tools: ToolHandler[] = [
   // Generic tools
@@ -131,6 +138,11 @@ export const tools: ToolHandler[] = [
   // Dev analytics
   getDevHealth,
   getRepoTrends,
+  // Treasury entity registry (resolves curated entity slugs / URLs that are
+  // NOT in the governance DB — see tools/treasury.ts for why)
+  searchTreasuryEntitiesTool,
+  listTreasuryEntitiesTool,
+  getEntityProposalsTool,
 ];
 
 // Export individual tools for direct access
@@ -163,3 +175,8 @@ export { getTimeToEnactment, getContentionRate, getGovernanceVolume } from "./ef
 export { getCCDecisionMetrics, getComplianceStatus } from "./cc-analytics.js";
 export { getDrepActivityRate, getDrepRationaleRate, getDrepLifecycleTrends } from "./drep-analytics.js";
 export { getDevHealth, getRepoTrends } from "./dev-analytics.js";
+export {
+  searchTreasuryEntitiesTool,
+  listTreasuryEntitiesTool,
+  getEntityProposalsTool,
+} from "./treasury.js";

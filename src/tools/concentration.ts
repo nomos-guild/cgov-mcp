@@ -22,9 +22,7 @@ export const getDrepConcentration: ToolHandler = {
 
 The Gini coefficient ranges from 0 (perfectly equal) to 1 (maximally concentrated). Values above 0.6 indicate high concentration. Uses drep_epoch_snapshot for historical data or drep table for current epoch.
 
-Useful for assessing whether governance power is healthy distributed or dangerously concentrated.
-
-Note: All monetary/power values (voting_power) are in lovelace. Divide by 1,000,000 to display in ADA.`,
+Useful for assessing whether governance power is healthy distributed or dangerously concentrated.`,
     inputSchema: {
       type: "object",
       properties: {
@@ -113,9 +111,7 @@ HHI = sum of squared market shares. Ranges from near 0 (fragmented) to 10000 (mo
 - HHI 1500-2500: Moderately concentrated
 - HHI > 2500: Highly concentrated
 
-Groups pools by pool_group entity to identify multi-pool operators.
-
-Note: All monetary/power values (voting_power) are in lovelace. Divide by 1,000,000 to display in ADA.`,
+Groups pools by pool_group entity to identify multi-pool operators.`,
     inputSchema: {
       type: "object",
       properties: {},

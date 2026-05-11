@@ -1,4 +1,5 @@
 import { query } from "../db/index.js";
+import { drepUrl, proposalUrl } from "../lib/urls.js";
 import { createJsonResult, createTextResult, type ToolHandler } from "../types/index.js";
 
 interface RationaleBody {
@@ -76,9 +77,7 @@ Use this to find:
 - DRep/CC/SPO voting patterns with explanations
 - References to specific articles or governance actions
 
-The rationale JSON contains: summary, rationaleStatement, conclusion, precedentDiscussion, counterargumentDiscussion, internalVote (for CC), and references.
-
-Note: All monetary/power values (voting_power) are in lovelace. Divide by 1,000,000 to display in ADA.`,
+The rationale JSON contains: summary, rationaleStatement, conclusion, precedentDiscussion, counterargumentDiscussion, internalVote (for CC), and references.`,
     inputSchema: {
       type: "object",
       properties: {
@@ -189,14 +188,18 @@ Note: All monetary/power values (voting_power) are in lovelace. Divide by 1,000,
 
       const formattedResults = result.rows.map((row) => {
         const rationale = parseRationale(row.rationale);
+        const voterId = row.drep_id || row.spo_id || row.cc_id;
         return {
           vote_id: row.id,
           vote: row.vote,
           voter_type: row.voter_type,
-          voter_id: row.drep_id || row.spo_id || row.cc_id,
+          voter_id: voterId,
+          // Only DReps have an app.cgov.io page; SPO/CC have no public route.
+          voter_url: row.drep_id ? drepUrl(row.drep_id) : null,
           voter_name: row.drep_name || row.spo_name || row.cc_name || null,
           spo_ticker: row.spo_ticker || null,
           proposal_id: row.proposal_id,
+          proposal_url: proposalUrl(row.proposal_id),
           proposal_title: row.proposal_title,
           governance_action_type: row.governance_action_type,
           proposal_status: row.proposal_status,
@@ -313,6 +316,7 @@ Returns the complete CIP-100/CIP-136 structured rationale including:
           vote: row.vote,
           voter_type: row.voter_type,
           voter_id: row.drep_id || row.spo_id || row.cc_id,
+          voter_url: row.drep_id ? drepUrl(row.drep_id) : null,
           voter_name: row.drep_name,
           voting_power: row.voting_power?.toString(),
           voted_at: row.voted_at,
@@ -320,6 +324,7 @@ Returns the complete CIP-100/CIP-136 structured rationale including:
         },
         proposal: {
           id: row.proposal_id,
+          url: proposalUrl(row.proposal_id),
           title: row.proposal_title,
           governance_action_type: row.governance_action_type,
           description: row.proposal_description,
@@ -357,9 +362,7 @@ Returns all votes cast by the DRep including:
 - Vote choice (YES/NO/ABSTAIN)
 - Proposal details
 - Rationale summary for each vote
-- Voting power at time of vote
-
-Note: All monetary/power values (voting_power) are in lovelace. Divide by 1,000,000 to display in ADA.`,
+- Voting power at time of vote`,
     inputSchema: {
       type: "object",
       properties: {
@@ -467,6 +470,7 @@ Note: All monetary/power values (voting_power) are in lovelace. Divide by 1,000,
           vote_id: row.id,
           vote: row.vote,
           proposal_id: row.proposal_id,
+          proposal_url: proposalUrl(row.proposal_id),
           proposal_title: row.proposal_title,
           governance_action_type: row.governance_action_type,
           proposal_status: row.proposal_status,
@@ -489,6 +493,7 @@ Note: All monetary/power values (voting_power) are in lovelace. Divide by 1,000,
       return createJsonResult({
         drep: {
           id: drep_id,
+          url: drepUrl(drep_id),
           name: drepName,
           current_voting_power: currentVotingPower?.toString(),
         },
@@ -511,9 +516,7 @@ export const getProposalRationales: ToolHandler = {
     name: "get_proposal_rationales",
     description: `Get all voting rationales for a specific proposal.
 
-Returns all votes with rationales for a governance action, grouped by vote choice (YES/NO/ABSTAIN) and voter type (DREP/SPO/CC). Useful for understanding the reasoning behind community decisions.
-
-Note: All monetary/power values (voting_power) are in lovelace. Divide by 1,000,000 to display in ADA.`,
+Returns all votes with rationales for a governance action, grouped by vote choice (YES/NO/ABSTAIN) and voter type (DREP/SPO/CC). Useful for understanding the reasoning behind community decisions.`,
     inputSchema: {
       type: "object",
       properties: {
@@ -627,6 +630,7 @@ Note: All monetary/power values (voting_power) are in lovelace. Divide by 1,000,
           groupedVotes[voteType].push({
             voter_type: row.voter_type,
             voter_id: row.drep_id || row.spo_id || row.cc_id,
+            voter_url: row.drep_id ? drepUrl(row.drep_id) : null,
             voter_name: row.drep_name,
             voting_power: row.voting_power?.toString(),
             voted_at: row.voted_at,
@@ -656,6 +660,7 @@ Note: All monetary/power values (voting_power) are in lovelace. Divide by 1,000,
       return createJsonResult({
         proposal: {
           id: proposal.proposal_id,
+          url: proposalUrl(proposal.proposal_id),
           title: proposal.title,
           governance_action_type: proposal.governance_action_type,
           status: proposal.status,
